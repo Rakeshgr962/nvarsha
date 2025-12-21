@@ -1,8 +1,0 @@
-[build]
-  command = "npm run build"
-  publish = "."
-
-# ❌ Do NOT set:
-# base = "/opt/build"
-# or any absolute path
-
