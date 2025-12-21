@@ -1,121 +1,135 @@
-// ===============================
-// Character counter
-// ===============================
-const messageInput = document.getElementById('message');
-const charCount = document.getElementById('charCount');
+// ============================================
+// CONTACT FORM SCRIPT (SAFE VERSION)
+// Functions & Logic Preserved
+// ============================================
 
-if (messageInput && charCount) {
-  messageInput.addEventListener('input', () => {
-    charCount.textContent = messageInput.value.length;
-  });
-}
+console.log('🚀 Contact script loading...');
 
-// ===============================
-// API base (Vercel backend)
-// ===============================
-const API_BASE_URL = 'https://nvarsha-xm91.vercel.app'; // your Vercel backend URL
+// ===== API CONFIG =====
+const API_BASE_URL = 'https://nvarsha-xm91.vercel.app';
 
-// ===============================
-// Form submission to Vercel backend
-// ===============================
-const contactForm = document.getElementById('contactForm');
-const successMessage = document.getElementById('successMessage');
-
-if (contactForm) {
-  contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Reset error messages
-    document.querySelectorAll('.error-message').forEach(el => {
-      el.style.display = 'none';
-    });
-
-    let isValid = true;
-
-    // Validate name
-    const nameEl = document.getElementById('name');
-    const emailEl = document.getElementById('email');
-    const subjectEl = document.getElementById('subject');
-    const messageEl = document.getElementById('message');
-
-    const name = nameEl.value.trim();
-    if (name === '') {
-      document.getElementById('nameError').style.display = 'block';
-      isValid = false;
-    }
-
-    // Validate email
-    const email = emailEl.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      document.getElementById('emailError').style.display = 'block';
-      isValid = false;
-    }
-
-    // Validate subject
-    const subject = subjectEl.value.trim();
-    if (subject === '') {
-      document.getElementById('subjectError').style.display = 'block';
-      isValid = false;
-    }
-
-    // Validate message
-    const message = messageEl.value.trim();
-    if (message === '') {
-      document.getElementById('messageError').style.display = 'block';
-      isValid = false;
-    }
-
-    if (!isValid) {
-      return;
-    }
-
-    // Show loading state
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn ? submitBtn.innerHTML : '';
-    if (submitBtn) {
-      submitBtn.innerHTML = ' Sending...';
-      submitBtn.disabled = true;
-    }
-
+// ===== INITIALIZE APP =====
+function initializeContactForm() {
     try {
-      const formData = { name, email, subject, message };
+        console.log('🔧 Initializing contact form...');
 
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+        // ===== ELEMENT REFERENCES =====
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        const messageInput = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
 
-      const result = await response.json().catch(() => ({}));
-      console.log('Backend response:', response.status, result);
-
-      if (response.ok && result.success !== false) {
-        // Show success message
-        if (successMessage) {
-          successMessage.style.display = 'block';
-          setTimeout(() => {
-            successMessage.style.display = 'none';
-          }, 5000);
+        if (!contactForm) {
+            console.warn('⚠️ Contact form not found');
+            return;
         }
 
-        contactForm.reset();
-        if (charCount) charCount.textContent = '0';
+        // ===== CHARACTER COUNTER =====
+        if (messageInput && charCount) {
+            messageInput.addEventListener('input', () => {
+                charCount.textContent = messageInput.value.length;
+            });
+        }
 
-        console.log('Form submitted successfully:', result);
-      } else {
-        throw new Error(result.error || 'Failed to submit form');
-      }
+        // ===== FORM SUBMISSION =====
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Reset error messages
+            document.querySelectorAll('.error-message')
+                .forEach(el => el.style.display = 'none');
+
+            let isValid = true;
+
+            // ===== VALIDATION =====
+            const name = document.getElementById('name')?.value.trim() || '';
+            const email = document.getElementById('email')?.value.trim() || '';
+            const subject = document.getElementById('subject')?.value.trim() || '';
+            const message = messageInput?.value.trim() || '';
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (name === '') {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (subject === '') {
+                document.getElementById('subjectError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (message === '') {
+                document.getElementById('messageError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // ===== LOADING STATE =====
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.innerHTML : '';
+
+            if (submitBtn) {
+                submitBtn.innerHTML = ' Sending...';
+                submitBtn.disabled = true;
+            }
+
+            try {
+                const payload = { name, email, subject, message };
+
+                const response = await fetch(`${API_BASE_URL}/api/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json().catch(() => ({}));
+                console.log('📨 Backend response:', response.status, result);
+
+                if (response.ok && result.success !== false) {
+                    // Success UI
+                    if (successMessage) {
+                        successMessage.style.display = 'block';
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                        }, 5000);
+                    }
+
+                    contactForm.reset();
+                    if (charCount) charCount.textContent = '0';
+
+                    console.log('✅ Form submitted successfully');
+                } else {
+                    throw new Error(result.error || 'Submission failed');
+                }
+            } catch (error) {
+                console.error('❌ Submission error:', error);
+                alert('There was an error sending your message. Please try again later.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+        });
+
+        console.log('✅ Contact form initialized');
     } catch (error) {
-      console.error('Form submission error:', error);
-      alert('There was an error sending your message. Please try again later.');
-    } finally {
-      if (submitBtn) {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      }
+        console.error('❌ Contact form init error:', error);
     }
-  });
 }
+
+// ===== DOM READY CHECK =====
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeContactForm);
+} else {
+    initializeContactForm();
+}
+
+console.log('✅ Contact script fully loaded');
