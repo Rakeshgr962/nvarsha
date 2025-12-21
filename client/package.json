@@ -1,0 +1,7 @@
+{
+  "name": "varsha-portfolio-client",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'No build step'"
+  }
+}
