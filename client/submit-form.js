@@ -4,6 +4,9 @@
 // ============================================
 
 console.log('🚀 Contact script loading...');
+contactForm.addEventListener('submit', async (e) => {
+    console.log('🔥 Submit event triggered');
+    e.preventDefault();
 
 // ===== API CONFIG =====
 const API_BASE_URL = 'https://nvarsha-xm91.vercel.app';
@@ -133,3 +136,4 @@ if (document.readyState === 'loading') {
 }
 
 console.log('✅ Contact script fully loaded');
+
