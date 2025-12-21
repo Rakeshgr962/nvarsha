@@ -1,4 +1,6 @@
+// ===============================
 // Character counter
+// ===============================
 const messageInput = document.getElementById('message');
 const charCount = document.getElementById('charCount');
 
@@ -8,10 +10,14 @@ if (messageInput && charCount) {
   });
 }
 
+// ===============================
 // API base (Vercel backend)
-const API_BASE_URL = 'https://nvarsha-xm91.vercel.app/'; // replace with your Vercel URL
+// ===============================
+const API_BASE_URL = 'https://nvarsha-xm91.vercel.app'; // your Vercel backend URL
 
+// ===============================
 // Form submission to Vercel backend
+// ===============================
 const contactForm = document.getElementById('contactForm');
 const successMessage = document.getElementById('successMessage');
 
@@ -20,19 +26,26 @@ if (contactForm) {
     e.preventDefault();
 
     // Reset error messages
-    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.error-message').forEach(el => {
+      el.style.display = 'none';
+    });
 
     let isValid = true;
 
     // Validate name
-    const name = document.getElementById('name').value.trim();
+    const nameEl = document.getElementById('name');
+    const emailEl = document.getElementById('email');
+    const subjectEl = document.getElementById('subject');
+    const messageEl = document.getElementById('message');
+
+    const name = nameEl.value.trim();
     if (name === '') {
       document.getElementById('nameError').style.display = 'block';
       isValid = false;
     }
 
     // Validate email
-    const email = document.getElementById('email').value.trim();
+    const email = emailEl.value.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       document.getElementById('emailError').style.display = 'block';
@@ -40,14 +53,14 @@ if (contactForm) {
     }
 
     // Validate subject
-    const subject = document.getElementById('subject').value.trim();
+    const subject = subjectEl.value.trim();
     if (subject === '') {
       document.getElementById('subjectError').style.display = 'block';
       isValid = false;
     }
 
     // Validate message
-    const message = document.getElementById('message').value.trim();
+    const message = messageEl.value.trim();
     if (message === '') {
       document.getElementById('messageError').style.display = 'block';
       isValid = false;
@@ -59,9 +72,11 @@ if (contactForm) {
 
     // Show loading state
     const submitBtn = contactForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = ' Sending...';
-    submitBtn.disabled = true;
+    const originalText = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.innerHTML = ' Sending...';
+      submitBtn.disabled = true;
+    }
 
     try {
       const formData = { name, email, subject, message };
@@ -71,7 +86,7 @@ if (contactForm) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json().catch(() => ({}));
@@ -97,9 +112,10 @@ if (contactForm) {
       console.error('Form submission error:', error);
       alert('There was an error sending your message. Please try again later.');
     } finally {
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
+      if (submitBtn) {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
     }
   });
 }
-
