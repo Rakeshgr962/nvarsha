@@ -48,21 +48,29 @@ function initializeContactForm() {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (name === '') {
-                document.getElementById('nameError')?.style.display = 'block';
-                isValid = false;
-            }
-            if (!emailRegex.test(email)) {
-                document.getElementById('emailError')?.style.display = 'block';
-                isValid = false;
-            }
-            if (subject === '') {
-                document.getElementById('subjectError')?.style.display = 'block';
-                isValid = false;
-            }
-            if (message === '') {
-                document.getElementById('messageError')?.style.display = 'block';
-                isValid = false;
-            }
+    const el = document.getElementById('nameError');
+    if (el) el.style.display = 'block';
+    isValid = false;
+}
+
+if (!emailRegex.test(email)) {
+    const el = document.getElementById('emailError');
+    if (el) el.style.display = 'block';
+    isValid = false;
+}
+
+if (subject === '') {
+    const el = document.getElementById('subjectError');
+    if (el) el.style.display = 'block';
+    isValid = false;
+}
+
+if (message === '') {
+    const el = document.getElementById('messageError');
+    if (el) el.style.display = 'block';
+    isValid = false;
+}
+
 
             if (!isValid) return;
 
@@ -124,4 +132,5 @@ if (document.readyState === 'loading') {
 }
 
 console.log('✅ Contact script fully loaded');
+
 
