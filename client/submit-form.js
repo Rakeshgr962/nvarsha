@@ -9,7 +9,7 @@ if (messageInput && charCount) {
 }
 
 // API base (Vercel backend)
-const API_BASE_URL = 'https://your-varsha-backend.vercel.app'; // replace with your Vercel URL
+const API_BASE_URL = 'https://nvarsha-xm91.vercel.app/'; // replace with your Vercel URL
 
 // Form submission to Vercel backend
 const contactForm = document.getElementById('contactForm');
@@ -102,3 +102,4 @@ if (contactForm) {
     }
   });
 }
+
